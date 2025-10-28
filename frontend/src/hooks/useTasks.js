@@ -5,28 +5,61 @@ export const useTasks = () => {
   const [tasks, setTasks] = useState([]);
 
   const loadTasks = async () => {
-    const data = await getTasks();
-    setTasks(data);
+    try {
+      const data = await getTasks();
+      // Ensure data is always an array
+      if (Array.isArray(data)) {
+        setTasks(data);
+      } else if (data && typeof data === "object") {
+        // If data is an object with a tasks property, use that
+        setTasks(Array.isArray(data.tasks) ? data.tasks : []);
+      } else {
+        setTasks([]);
+      }
+    } catch (error) {
+      console.error("Error loading tasks:", error);
+      setTasks([]);
+    }
   };
 
   const addTask = async (task) => {
-    await createTask(task);
-    await loadTasks();
+    try {
+      await createTask(task);
+      await loadTasks();
+    } catch (error) {
+      console.error("Error adding task:", error);
+      throw error;
+    }
   };
 
   const markAsDone = async (id) => {
-    await completeTask(id);
-    await loadTasks();
+    try {
+      await completeTask(id);
+      await loadTasks();
+    } catch (error) {
+      console.error("Error marking task as done:", error);
+      throw error;
+    }
   };
 
   const editTask = async (id, task) => {
-    await updateTask(id, task);
-    await loadTasks();
+    try {
+      await updateTask(id, task);
+      await loadTasks();
+    } catch (error) {
+      console.error("Error editing task:", error);
+      throw error;
+    }
   };
 
   const removeTask = async (id) => {
-    await deleteTask(id);
-    await loadTasks();
+    try {
+      await deleteTask(id);
+      await loadTasks();
+    } catch (error) {
+      console.error("Error removing task:", error);
+      throw error;
+    }
   };
 
   useEffect(() => {

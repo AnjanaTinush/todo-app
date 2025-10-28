@@ -5,7 +5,7 @@ import TaskItem from "./TaskItem";
 const TaskList = ({ tasks, onDone, onEdit, onDelete }) => {
   const { isDark } = useTheme();
 
-  if (tasks.length === 0) {
+  if (!tasks || !Array.isArray(tasks) || tasks.length === 0) {
     return (
       <div className={`rounded-2xl p-12 text-center border-2 border-dashed transition-all
                        ${isDark

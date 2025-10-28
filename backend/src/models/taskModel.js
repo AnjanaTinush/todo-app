@@ -9,7 +9,9 @@ export const createTask = async (title, description, emoji) => {
       "INSERT INTO task (title, description, emoji) VALUES (?, ?, ?)",
       [title, description, emoji]
     );
+    console.log("Full insert result:", result);
     console.log("Task inserted with ID:", result.insertId);
+    console.log("Returning task object:", { id: result.insertId, title, description, emoji, completed: false });
     return { id: result.insertId, title, description, emoji, completed: false };
   } catch (error) {
     console.error("Model createTask error:", error.message);
@@ -19,10 +21,17 @@ export const createTask = async (title, description, emoji) => {
 };
 
 export const getRecentTasks = async () => {
-  const [rows] = await pool.query(
-    "SELECT * FROM task WHERE completed = false ORDER BY created_at DESC LIMIT 5"
-  );
-  return rows;
+  try {
+    console.log("Model getRecentTasks called");
+    const [rows] = await pool.query(
+      "SELECT * FROM task WHERE completed = false ORDER BY created_at DESC LIMIT 5"
+    );
+    console.log("Model getRecentTasks result:", rows);
+    return rows;
+  } catch (error) {
+    console.error("Model getRecentTasks error:", error.message);
+    throw error;
+  }
 };
 
 export const markTaskAsDone = async (id) => {
@@ -44,16 +53,23 @@ export const deleteTask = async (id) => {
 };
 
 export const initTable = async () => {
-  const conn = await pool.getConnection();
-  await conn.query(`
-    CREATE TABLE IF NOT EXISTS task (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      title VARCHAR(255) NOT NULL,
-      description TEXT,
-      emoji VARCHAR(10),
-      completed BOOLEAN DEFAULT FALSE,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
-  conn.release();
+  try {
+    const conn = await pool.getConnection();
+    console.log("Initializing task table...");
+    await conn.query(`
+      CREATE TABLE IF NOT EXISTS task (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        title VARCHAR(255) NOT NULL,
+        description TEXT,
+        emoji VARCHAR(10),
+        completed BOOLEAN DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log("Task table initialized successfully!");
+    conn.release();
+  } catch (error) {
+    console.error("Error initializing task table:", error.message);
+    throw error;
+  }
 };

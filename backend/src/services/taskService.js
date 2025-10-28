@@ -16,7 +16,15 @@ export const addTask = async (title, description, emoji) => {
 };
 
 export const listRecentTasks = async () => {
-  return await TaskModel.getRecentTasks();
+  console.log("Service listRecentTasks called");
+  try {
+    const tasks = await TaskModel.getRecentTasks();
+    console.log("Service listRecentTasks result:", tasks);
+    return tasks;
+  } catch (error) {
+    console.error("Service listRecentTasks error:", error.message);
+    throw error;
+  }
 };
 
 export const completeTask = async (id) => {
