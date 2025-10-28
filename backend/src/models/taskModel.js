@@ -3,11 +3,19 @@
 import pool from "../config/db.js";
 
 export const createTask = async (title, description, emoji) => {
-  const [result] = await pool.query(
-    "INSERT INTO task (title, description, emoji) VALUES (?, ?, ?)",
-    [title, description, emoji]
-  );
-  return { id: result.insertId, title, description, emoji, completed: false };
+  console.log("Model createTask called with:", { title, description, emoji });
+  try {
+    const [result] = await pool.query(
+      "INSERT INTO task (title, description, emoji) VALUES (?, ?, ?)",
+      [title, description, emoji]
+    );
+    console.log("Task inserted with ID:", result.insertId);
+    return { id: result.insertId, title, description, emoji, completed: false };
+  } catch (error) {
+    console.error("Model createTask error:", error.message);
+    console.error("SQL Error:", error);
+    throw error;
+  }
 };
 
 export const getRecentTasks = async () => {

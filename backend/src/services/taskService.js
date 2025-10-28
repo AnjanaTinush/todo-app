@@ -3,8 +3,16 @@
 import * as TaskModel from "../models/taskModel.js";
 
 export const addTask = async (title, description, emoji) => {
+  console.log("Service addTask called with:", { title, description, emoji });
   if (!title) throw new Error("Title is required");
-  return await TaskModel.createTask(title, description, emoji);
+  try {
+    const result = await TaskModel.createTask(title, description, emoji);
+    console.log("Service addTask result:", result);
+    return result;
+  } catch (error) {
+    console.error("Service addTask error:", error.message);
+    throw error;
+  }
 };
 
 export const listRecentTasks = async () => {
