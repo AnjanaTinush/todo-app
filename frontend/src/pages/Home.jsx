@@ -3,6 +3,8 @@ import { useTheme } from "../context/ThemeContext";
 import TaskForm from "../components/TaskForm";
 import TaskList from "../components/TaskList";
 import EditTaskModal from "../components/EditTaskModal";
+import Toast from "../components/Toast";
+import ConfirmDialog from "../components/ConfirmDialog";
 import { useTasks } from "../hooks/useTasks";
 
 const Home = () => {
@@ -10,14 +12,50 @@ const Home = () => {
   const { tasks, addTask, markAsDone, editTask, removeTask } = useTasks();
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
+  const [toast, setToast] = useState(null);
+  const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, taskId: null, type: null });
+
+  const showToast = (message, type = "success") => {
+    setToast({ message, type });
+  };
 
   const handleEditClick = (task) => {
     setEditingTask(task);
     setIsEditOpen(true);
   };
 
-  const handleUpdateTask = (updatedTask) => {
-    editTask(updatedTask.id, updatedTask);
+  const handleUpdateTask = async (updatedTask) => {
+    try {
+      await editTask(updatedTask.id, updatedTask);
+      showToast("Task updated successfully!", "success");
+    } catch (error) {
+      showToast("Failed to update task", "error");
+    }
+  };
+
+  const handleDeleteClick = (taskId) => {
+    setConfirmDialog({ isOpen: true, taskId, type: "delete" });
+  };
+
+  const handleDoneClick = (taskId) => {
+    setConfirmDialog({ isOpen: true, taskId, type: "done" });
+  };
+
+  const handleConfirmAction = async () => {
+    const { taskId, type } = confirmDialog;
+
+    try {
+      if (type === "delete") {
+        await removeTask(taskId);
+        showToast("Task deleted successfully!", "success");
+      } else if (type === "done") {
+        await markAsDone(taskId);
+        showToast("Task marked as done!", "success");
+      }
+      setConfirmDialog({ isOpen: false, taskId: null, type: null });
+    } catch (error) {
+      showToast("Failed to complete action", "error");
+    }
   };
 
   const handleCloseModal = () => {
@@ -48,7 +86,16 @@ const Home = () => {
           {/* Form Section - Sticky on desktop */}
           <div className="lg:col-span-1">
             <div className="sticky top-[80px]">
-              <TaskForm onAdd={addTask} />
+              <TaskForm
+                onAdd={async (taskData) => {
+                  try {
+                    await addTask(taskData);
+                    showToast("Task created successfully!", "success");
+                  } catch (error) {
+                    showToast("Failed to create task", "error");
+                  }
+                }}
+              />
             </div>
           </div>
 
@@ -66,20 +113,31 @@ const Home = () => {
                   ? "text-dark-text-secondary"
                   : "text-light-text-secondary"
                 }`}>
-                  📊 Progress: {tasks.length} active task{tasks.length !== 1 ? "s" : ""}
+                  Progress: {tasks.length} active task{tasks.length !== 1 ? "s" : ""}
                 </p>
               </div>
             )}
 
             <TaskList
               tasks={tasks}
-              onDone={markAsDone}
+              onDone={handleDoneClick}
               onEdit={handleEditClick}
-              onDelete={removeTask}
+              onDelete={handleDeleteClick}
             />
           </div>
         </div>
       </div>
+
+      {/* Toast Notification - Top Center */}
+      {toast && (
+        <div className="fixed top-8 left-1/2 transform -translate-x-1/2 z-40">
+          <Toast
+            message={toast.message}
+            type={toast.type}
+            onClose={() => setToast(null)}
+          />
+        </div>
+      )}
 
       {/* Edit Modal */}
       <EditTaskModal
@@ -87,6 +145,30 @@ const Home = () => {
         isOpen={isEditOpen}
         onClose={handleCloseModal}
         onUpdate={handleUpdateTask}
+      />
+
+      {/* Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={confirmDialog.isOpen}
+        title={
+          confirmDialog.type === "delete"
+            ? "Delete Task?"
+            : confirmDialog.type === "done"
+            ? "Mark Task as Done?"
+            : ""
+        }
+        message={
+          confirmDialog.type === "delete"
+            ? "Are you sure you want to delete this task? This action cannot be undone."
+            : confirmDialog.type === "done"
+            ? "Are you sure you want to mark this task as done?"
+            : ""
+        }
+        confirmText={confirmDialog.type === "delete" ? "Delete" : "Done"}
+        cancelText="Cancel"
+        type={confirmDialog.type === "delete" ? "danger" : "warning"}
+        onConfirm={handleConfirmAction}
+        onCancel={() => setConfirmDialog({ isOpen: false, taskId: null, type: null })}
       />
     </div>
   );
