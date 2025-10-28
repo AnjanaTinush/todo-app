@@ -1,14 +1,5 @@
 // Business logic layer — Open/Closed Principle: can extend without modifying
 
-// PORT=4000
-// DB_HOST=localhost
-// DB_USER=root
-// DB_PASSWORD=
-// DB_NAME=todo_db
-
-// REACT_APP_API_BASE_URL=http://localhost:4000/api
-
-
 import * as TaskModel from "../models/taskModel.js";
 
 export const addTask = async (title, description, emoji) => {
