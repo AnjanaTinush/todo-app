@@ -1,31 +1,123 @@
 import { useState } from "react";
+import { useTheme } from "../context/ThemeContext";
+import EmojiSelector from "./EmojiSelector";
+
 
 const TaskForm = ({ onAdd }) => {
+  const { isDark } = useTheme();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [emoji, setEmoji] = useState("😊");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title.trim()) return;
-    onAdd({ title, description });
-    setTitle("");
-    setDescription("");
+
+    setIsSubmitting(true);
+    try {
+      await onAdd({ title, description, emoji });
+      // Reset form
+      setTitle("");
+      setDescription("");
+      setEmoji("😊");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
+  const isFormValid = title.trim().length > 0;
+
   return (
-    <form onSubmit={handleSubmit} className="task-form">
-      <input
-        type="text"
-        placeholder="Task title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
-      <textarea
-        placeholder="Task description"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-      />
-      <button type="submit">Add Task</button>
+    <form
+      onSubmit={handleSubmit}
+      className={`p-6 rounded-2xl transition-all duration-300
+                   ${isDark
+        ? "bg-dark-surface border border-dark-border shadow-dark-card"
+        : "bg-light-bg border border-light-border shadow-card"
+      }`}
+    >
+      {/* Header */}
+      <h2 className={`text-xl font-bold mb-6
+                      ${isDark ? "text-dark-text" : "text-light-text"}`}>
+        ✨ Create New Task
+      </h2>
+
+      {/* Emoji Selector */}
+      <div className="mb-6">
+        <label className={`block text-sm font-semibold mb-3
+                          ${isDark ? "text-dark-text" : "text-light-text"}`}>
+          Choose Emoji
+        </label>
+        <EmojiSelector selectedEmoji={emoji} onEmojiSelect={setEmoji} />
+      </div>
+
+      {/* Title Input */}
+      <div className="mb-5">
+        <label className={`block text-sm font-semibold mb-2
+                          ${isDark ? "text-dark-text" : "text-light-text"}`}>
+          Task Title
+        </label>
+        <input
+          type="text"
+          placeholder="What do you need to do?"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          maxLength={100}
+          className={`w-full px-4 py-3 rounded-xl transition-all duration-150
+                       border-2 outline-none
+                       ${isDark
+            ? "bg-dark-bg border-dark-border text-dark-text placeholder-dark-text-secondary hover:border-dark-card focus:border-primary-500"
+            : "bg-light-surface border-light-border text-light-text placeholder-light-text-secondary hover:border-light-bg focus:border-primary-500"
+          }
+                       focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
+                       ${isDark ? "focus:ring-offset-dark-surface" : "focus:ring-offset-light-bg"}`}
+        />
+        <p className={`text-xs mt-1 ${isDark ? "text-dark-text-secondary" : "text-light-text-secondary"}`}>
+          {title.length}/100
+        </p>
+      </div>
+
+      {/* Description Input */}
+      <div className="mb-6">
+        <label className={`block text-sm font-semibold mb-2
+                          ${isDark ? "text-dark-text" : "text-light-text"}`}>
+          Description
+        </label>
+        <textarea
+          placeholder="Add more details about your task..."
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          rows="4"
+          maxLength={500}
+          className={`w-full px-4 py-3 rounded-xl transition-all duration-150
+                       border-2 outline-none resize-none
+                       ${isDark
+            ? "bg-dark-bg border-dark-border text-dark-text placeholder-dark-text-secondary hover:border-dark-card focus:border-primary-500"
+            : "bg-light-surface border-light-border text-light-text placeholder-light-text-secondary hover:border-light-bg focus:border-primary-500"
+          }
+                       focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
+                       ${isDark ? "focus:ring-offset-dark-surface" : "focus:ring-offset-light-bg"}`}
+        />
+        <p className={`text-xs mt-1 ${isDark ? "text-dark-text-secondary" : "text-light-text-secondary"}`}>
+          {description.length}/500
+        </p>
+      </div>
+
+      {/* Submit Button */}
+      <button
+        type="submit"
+        disabled={!isFormValid || isSubmitting}
+        className={`w-full py-3 rounded-xl font-semibold transition-all duration-150
+                     ${isFormValid && !isSubmitting
+          ? "bg-primary-600 hover:bg-primary-700 text-white shadow-card hover:shadow-card-lg"
+          : "bg-gray-400 text-gray-200 cursor-not-allowed"
+        }
+                     active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
+                     ${isDark ? "focus:ring-offset-dark-surface" : "focus:ring-offset-light-bg"}`}
+      >
+        {isSubmitting ? "Creating..." : "➕ Create Task"}
+      </button>
     </form>
   );
 };

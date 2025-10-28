@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getTasks, createTask, completeTask } from "../api/taskService";
+import { getTasks, createTask, completeTask, updateTask, deleteTask } from "../api/taskService";
 
 export const useTasks = () => {
   const [tasks, setTasks] = useState([]);
@@ -19,9 +19,19 @@ export const useTasks = () => {
     await loadTasks();
   };
 
+  const editTask = async (id, task) => {
+    await updateTask(id, task);
+    await loadTasks();
+  };
+
+  const removeTask = async (id) => {
+    await deleteTask(id);
+    await loadTasks();
+  };
+
   useEffect(() => {
     loadTasks();
   }, []);
 
-  return { tasks, addTask, markAsDone };
+  return { tasks, addTask, markAsDone, editTask, removeTask };
 };

@@ -16,3 +16,13 @@ export const completeTask = async (id) => {
   const res = await axios.put(`${API_URL}/${id}/done`);
   return res.data;
 };
+
+export const updateTask = async (id, task) => {
+  const res = await axios.put(`${API_URL}/${id}`, task);
+  return res.data;
+};
+
+export const deleteTask = async (id) => {
+  const res = await axios.delete(`${API_URL}/${id}`);
+  return res.data;
+};

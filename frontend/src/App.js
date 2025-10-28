@@ -1,99 +1,44 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { ThemeProvider } from "./context/ThemeContext";
+import ThemeToggle from "./components/ThemeToggle";
+import Home from "./pages/Home";
+import "./App.css";
 
-const API_URL = "http://localhost:5000/api/tasks"; // ✅ Adjust for your backend
-
-export default function App() {
-  const [tasks, setTasks] = useState([]);
-  const [form, setForm] = useState({ title: "", description: "" });
-
-  // Fetch tasks
-  const fetchTasks = async () => {
-    try {
-      const res = await axios.get(API_URL);
-      setTasks(res.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  // Add task
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!form.title.trim()) return;
-    try {
-      await axios.post(API_URL, form);
-      setForm({ title: "", description: "" });
-      fetchTasks();
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  // Mark as done
-  const handleDone = async (id) => {
-    try {
-      await axios.put(`${API_URL}/${id}/done`);
-      fetchTasks();
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  useEffect(() => {
-    fetchTasks();
-  }, []);
-
+function App() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-neutral-light">
-      <div className="w-11/12 max-w-5xl bg-white rounded-2xl shadow-card p-10 flex gap-10">
-        {/* Left Panel */}
-        <div className="w-1/3 border-r pr-8">
-          <h2 className="text-xl font-semibold mb-6">Add a Task</h2>
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <input
-              type="text"
-              placeholder="Title"
-              value={form.title}
-              onChange={(e) => setForm({ ...form, title: e.target.value })}
-            />
-            <textarea
-              placeholder="Description"
-              rows="3"
-              value={form.description}
-              onChange={(e) => setForm({ ...form, description: e.target.value })}
-            />
-            <button type="submit" className="mt-2">Add</button>
-          </form>
-        </div>
-
-        {/* Right Panel */}
-        <div className="w-2/3 pl-8">
-          {tasks.length === 0 ? (
-            <p className="text-gray-500">No tasks available</p>
-          ) : (
-            <div className="flex flex-col gap-4">
-              {tasks.map((task) => (
-                <div
-                  key={task.id}
-                  className="bg-neutral rounded-lg p-4 flex items-center justify-between shadow-sm"
-                >
-                  <div>
-                    <h3 className="font-semibold text-gray-800">{task.title}</h3>
-                    <p className="text-gray-500 text-sm">{task.description}</p>
-                  </div>
-                  <button
-                    onClick={() => handleDone(task.id)}
-                    className="border border-primary text-primary bg-white hover:bg-primary hover:text-white transition rounded-md px-4 py-1"
-                  >
-                    Done
-                  </button>
-                </div>
-              ))}
+    <ThemeProvider>
+      <div className="min-h-screen transition-colors duration-300 bg-light-bg dark:bg-dark-bg">
+        {/* Header */}
+        <header className="border-b border-light-border dark:border-dark-border bg-light-bg dark:bg-dark-surface sticky top-0 z-20">
+          <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <span className="text-3xl">✅</span>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">
+                TaskHub
+              </h1>
             </div>
-          )}
-        </div>
+            <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">
+              Organize your tasks with style
+            </p>
+          </div>
+        </header>
+
+        {/* Main Content */}
+        <main className="min-h-[calc(100vh-80px)]">
+          <Home />
+        </main>
+
+        {/* Theme Toggle */}
+        <ThemeToggle />
+
+        {/* Footer */}
+        <footer className="border-t border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface mt-12">
+          <div className="max-w-7xl mx-auto px-6 py-6 text-center text-sm text-light-text-secondary dark:text-dark-text-secondary">
+            <p>Built with 💜 | TaskHub v1.0</p>
+          </div>
+        </footer>
       </div>
-    </div>
+    </ThemeProvider>
   );
 }
+
+export default App;

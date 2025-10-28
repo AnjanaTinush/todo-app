@@ -2,12 +2,12 @@
 
 import pool from "../config/db.js";
 
-export const createTask = async (title, description) => {
+export const createTask = async (title, description, emoji) => {
   const [result] = await pool.query(
-    "INSERT INTO task (title, description) VALUES (?, ?)",
-    [title, description]
+    "INSERT INTO task (title, description, emoji) VALUES (?, ?, ?)",
+    [title, description, emoji]
   );
-  return { id: result.insertId, title, description, completed: false };
+  return { id: result.insertId, title, description, emoji, completed: false };
 };
 
 export const getRecentTasks = async () => {
@@ -22,6 +22,19 @@ export const markTaskAsDone = async (id) => {
   return { id };
 };
 
+export const updateTask = async (id, title, description, emoji) => {
+  await pool.query(
+    "UPDATE task SET title = ?, description = ?, emoji = ? WHERE id = ?",
+    [title, description, emoji, id]
+  );
+  return { id, title, description, emoji };
+};
+
+export const deleteTask = async (id) => {
+  await pool.query("DELETE FROM task WHERE id = ?", [id]);
+  return { id };
+};
+
 export const initTable = async () => {
   const conn = await pool.getConnection();
   await conn.query(`
@@ -29,6 +42,7 @@ export const initTable = async () => {
       id INT AUTO_INCREMENT PRIMARY KEY,
       title VARCHAR(255) NOT NULL,
       description TEXT,
+      emoji VARCHAR(10),
       completed BOOLEAN DEFAULT FALSE,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
