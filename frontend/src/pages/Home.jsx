@@ -91,10 +91,10 @@ const Home = () => {
         </div>
 
         {/* Main Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Form Section - Sticky on desktop */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-[80px]">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+          {/* Form Section - Left Side */}
+          <div className="lg:col-span-4">
+            <div className="sticky top-[80px] z-10">
               <TaskForm
                 onAdd={async (taskData) => {
                   try {
@@ -108,8 +108,8 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Task List Section */}
-          <div className="lg:col-span-3">
+          {/* Task List Section - Right Side */}
+          <div className="lg:col-span-8">
             {tasks.length > 0 && (
               <div
                 className={`mb-6 p-4 rounded-xl border
