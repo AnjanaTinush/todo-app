@@ -2,18 +2,37 @@ version: '3.8'
 
 services:
   # MySQL Database
-  mysql:
+  database:
     image: mysql:8.0
-    container_name: todo_mysql
+    container_name: todo_database
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}  
+      MYSQL_DATABASE: ${DB_NAME}           
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - mysql_data_fresh:/var/lib/mysql
+    networks:
+      - todo_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u${DB_USER}", "-p${DB_PASSWORD}"]
+      timeout: 20s
+      retries: 10
+      interval: 5s
+
+  # phpMyAdmin for database management
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: todo_phpmyadmin
+    environment:
+      PMA_HOST: database
+      PMA_USER: ${DB_USER}           
+      PMA_PASSWORD: ${DB_PASSWORD} 
+    ports:
+      - "8081:80"
+    depends_on:
+      database:
+        condition: service_healthy
     networks:
       - todo_network
 
@@ -24,17 +43,20 @@ services:
       dockerfile: Dockerfile
     container_name: todo_backend
     environment:
-      PORT: ${PORT}
-      DB_HOST: ${DB_HOST}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_NAME: ${DB_NAME}
+      PORT: ${PORT}                 
+      DB_HOST: ${DB_HOST}         
+      DB_PORT: 3306
+      DB_USER: ${DB_USER}          
+      DB_PASSWORD: ${DB_PASSWORD}   
+      DB_NAME: ${DB_NAME}           
     ports:
-      - "4000:4000"
+      - "${PORT}:${PORT}"          
     depends_on:
-      - mysql
+      database:
+        condition: service_healthy
     networks:
       - todo_network
+    restart: on-failure
 
   # Frontend React App
   frontend:
@@ -42,10 +64,10 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        REACT_APP_API_BASE_URL: ${REACT_APP_API_BASE_URL}
+        REACT_APP_API_BASE_URL: ${REACT_APP_API_BASE_URL}  
     container_name: todo_frontend
     environment:
-      REACT_APP_API_BASE_URL: ${REACT_APP_API_BASE_URL}
+      REACT_APP_API_BASE_URL: ${REACT_APP_API_BASE_URL}   
     ports:
       - "3000:3000"
     depends_on:
@@ -53,27 +75,10 @@ services:
     networks:
       - todo_network
 
-  # phpMyAdmin for Database Management
-  phpmyadmin:
-    image: phpmyadmin:latest
-    container_name: todo_phpmyadmin
-    environment:
-      PMA_HOST: mysql
-      PMA_USER: ${DB_USER}
-      PMA_PASSWORD: ${DB_PASSWORD}
-      PMA_ROOT_PASSWORD: root
-    ports:
-      - "8080:80"
-    depends_on:
-      - mysql
-    networks:
-      - todo_network
-
 volumes:
-  mysql_data:
+  mysql_data_fresh:
     driver: local
 
 networks:
   todo_network:
     driver: bridge
-

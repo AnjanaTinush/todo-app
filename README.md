@@ -14,6 +14,10 @@ This is a modern, professional-grade Todo application that helps users manage th
 - 📱 **Responsive Design**: Works seamlessly on all device sizes
 - 🐳 **Docker Ready**: Complete containerization with Docker Compose
 
+
+![Todo App Overview](./frontend/src/asset/overview.png)
+
+
 ## Project Structure
 
 ```
@@ -153,8 +157,8 @@ todo-app/
 4. **Access the application**
    - Frontend: http://localhost:3000
    - Backend API: http://localhost:4000/api
-   - phpMyAdmin: http://localhost:8080
-   - MySQL: localhost:3306
+   - phpMyAdmin: http://localhost:8081
+   - MySQL: localhost:3307
 
 ### Option 2: Local Development
 
