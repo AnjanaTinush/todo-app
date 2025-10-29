@@ -1,20 +1,24 @@
-# Use Node 20 (matches your local version)
-FROM node:20-alpine
+# Use Node 18 as base image
+FROM node:18-alpine
 
-# Set working directory inside container
+# Set working directory
 WORKDIR /app
 
-# Copy dependency files first (for better caching)
+# Copy package files
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy all backend source code
+# Copy application code
 COPY . .
 
-# Expose the backend port
-EXPOSE 5000
+# Expose port 4000
+EXPOSE 4000
 
-# Start backend with nodemon in dev mode
-CMD ["npm", "run", "dev"]
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:4000/api/tasks', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})" || exit 1
+
+# Start application
+CMD ["npm", "start"]

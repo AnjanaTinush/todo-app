@@ -2,19 +2,36 @@
 
 import pool from "../config/db.js";
 
-export const createTask = async (title, description) => {
-  const [result] = await pool.query(
-    "INSERT INTO task (title, description) VALUES (?, ?)",
-    [title, description]
-  );
-  return { id: result.insertId, title, description, completed: false };
+export const createTask = async (title, description, emoji) => {
+  console.log("Model createTask called with:", { title, description, emoji });
+  try {
+    const [result] = await pool.query(
+      "INSERT INTO task (title, description, emoji) VALUES (?, ?, ?)",
+      [title, description, emoji]
+    );
+    console.log("Full insert result:", result);
+    console.log("Task inserted with ID:", result.insertId);
+    console.log("Returning task object:", { id: result.insertId, title, description, emoji, completed: false });
+    return { id: result.insertId, title, description, emoji, completed: false };
+  } catch (error) {
+    console.error("Model createTask error:", error.message);
+    console.error("SQL Error:", error);
+    throw error;
+  }
 };
 
 export const getRecentTasks = async () => {
-  const [rows] = await pool.query(
-    "SELECT * FROM task WHERE completed = false ORDER BY created_at DESC LIMIT 5"
-  );
-  return rows;
+  try {
+    console.log("Model getRecentTasks called");
+    const [rows] = await pool.query(
+      "SELECT * FROM task WHERE completed = false ORDER BY created_at DESC LIMIT 5"
+    );
+    console.log("Model getRecentTasks result:", rows);
+    return rows;
+  } catch (error) {
+    console.error("Model getRecentTasks error:", error.message);
+    throw error;
+  }
 };
 
 export const markTaskAsDone = async (id) => {
@@ -22,16 +39,37 @@ export const markTaskAsDone = async (id) => {
   return { id };
 };
 
+export const updateTask = async (id, title, description, emoji) => {
+  await pool.query(
+    "UPDATE task SET title = ?, description = ?, emoji = ? WHERE id = ?",
+    [title, description, emoji, id]
+  );
+  return { id, title, description, emoji };
+};
+
+export const deleteTask = async (id) => {
+  await pool.query("DELETE FROM task WHERE id = ?", [id]);
+  return { id };
+};
+
 export const initTable = async () => {
-  const conn = await pool.getConnection();
-  await conn.query(`
-    CREATE TABLE IF NOT EXISTS task (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      title VARCHAR(255) NOT NULL,
-      description TEXT,
-      completed BOOLEAN DEFAULT FALSE,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
-  conn.release();
+  try {
+    const conn = await pool.getConnection();
+    console.log("Initializing task table...");
+    await conn.query(`
+      CREATE TABLE IF NOT EXISTS task (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        title VARCHAR(255) NOT NULL,
+        description TEXT,
+        emoji VARCHAR(10),
+        completed BOOLEAN DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log("Task table initialized successfully!");
+    conn.release();
+  } catch (error) {
+    console.error("Error initializing task table:", error.message);
+    throw error;
+  }
 };
