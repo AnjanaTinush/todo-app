@@ -1,126 +1,64 @@
-/* ============================================
-   APP STYLES
-   ============================================ */
-
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
+/* Fade-in Animation */
+@keyframes fadeIn {
   from {
-    transform: rotate(0deg);
+    opacity: 0;
+    transform: translateY(10px);
   }
   to {
-    transform: rotate(360deg);
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-/* ============================================
-   CUSTOM SCROLLBAR STYLES
-   ============================================ */
+.animate-fadeIn {
+  animation: fadeIn 0.4s ease-out;
+}
 
-/* Webkit Browsers (Chrome, Safari, Edge) */
+/* Enhanced Custom Scrollbar for Light Mode */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
+  background: rgba(0, 0, 0, 0.02);
   border-radius: 10px;
-  margin: 4px 0;
+  margin: 8px 0;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.3);
+  background: linear-gradient(180deg, rgba(99, 102, 241, 0.3), rgba(59, 130, 246, 0.3));
   border-radius: 10px;
-  transition: background 0.2s ease-in-out;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: all 0.3s ease;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.5);
+  background: linear-gradient(180deg, rgba(99, 102, 241, 0.5), rgba(59, 130, 246, 0.5));
+  background-clip: padding-box;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb:active {
-  background: rgba(148, 163, 184, 0.6);
+/* Dark Mode */
+.dark .custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
 }
 
-/* Dark Mode Scrollbar */
 .dark .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(71, 85, 105, 0.4);
+  background: rgba(71, 85, 105, 0.5);
+  background-clip: padding-box;
 }
 
 .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(71, 85, 105, 0.6);
+  background: rgba(71, 85, 105, 0.7);
+  background-clip: padding-box;
 }
 
-.dark .custom-scrollbar::-webkit-scrollbar-thumb:active {
-  background: rgba(71, 85, 105, 0.8);
-}
-
-/* Firefox Scrollbar */
+/* Firefox */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(148, 163, 184, 0.3) transparent;
+  scrollbar-color: rgba(99, 102, 241, 0.3) rgba(0, 0, 0, 0.02);
 }
 
 .dark .custom-scrollbar {
-  scrollbar-color: rgba(71, 85, 105, 0.4) transparent;
-}
-
-/* ============================================
-   SMOOTH SCROLLING
-   ============================================ */
-
-.custom-scrollbar {
-  scroll-behavior: smooth;
-}
-
-/* Hide scrollbar when not hovering (optional) */
-.custom-scrollbar:not(:hover)::-webkit-scrollbar-thumb {
-  background: transparent;
-}
-
-.dark .custom-scrollbar:not(:hover)::-webkit-scrollbar-thumb {
-  background: transparent;
-}
-
-/* ============================================
-   UTILITY CLASSES
-   ============================================ */
-
-/* Remove default scrollbar for cleaner look */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+  scrollbar-color: rgba(71, 85, 105, 0.5) rgba(255, 255, 255, 0.05);
 }

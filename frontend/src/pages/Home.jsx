@@ -69,14 +69,16 @@ const Home = () => {
   };
 
   return (
-    <div className="home min-h-screen flex flex-col py-8 px-6">
+    <div className={`home min-h-screen flex flex-col py-8 px-6 ${
+      isDark ? "bg-dark-bg" : "bg-gradient-to-br from-gray-50 via-blue-50 to-gray-100"
+    }`}>
       <div className="max-w-7xl mx-auto w-full flex flex-col">
         {/* Page Header */}
         <div className="mb-12 text-center flex-shrink-0">
           <div className="flex items-center justify-center gap-3 mb-3">
             <h1
               className={`text-5xl font-bold ${
-                isDark ? "text-dark-text" : "text-light-text"
+                isDark ? "text-dark-text" : "text-gray-900"
               }`}
             >
               Welcome back!
@@ -90,7 +92,7 @@ const Home = () => {
 
           <p
             className={`text-lg ${
-              isDark ? "text-dark-text-secondary" : "text-light-text-secondary"
+              isDark ? "text-dark-text-secondary" : "text-gray-600"
             }`}
           >
             Manage your tasks efficiently and stay organized
@@ -120,17 +122,17 @@ const Home = () => {
             {/* Progress Info - Fixed at top */}
             {tasks.length > 0 && (
               <div
-                className={`mb-6 p-4 rounded-xl border flex-shrink-0 ${
+                className={`mb-6 p-4 rounded-xl border flex-shrink-0 shadow-sm ${
                   isDark
                     ? "bg-dark-surface border-dark-border"
-                    : "bg-light-surface border-light-border"
+                    : "bg-white border-gray-200"
                 }`}
               >
                 <p
                   className={`text-sm font-semibold ${
                     isDark
                       ? "text-dark-text-secondary"
-                      : "text-light-text-secondary"
+                      : "text-gray-700"
                   }`}
                 >
                   Progress: {tasks.length} active task
@@ -143,7 +145,7 @@ const Home = () => {
             <div
               className="overflow-y-auto custom-scrollbar pr-2 rounded-lg"
               style={{
-                height: "520px", // Adjust to control how many cards are visible
+                height: "520px",
                 maxHeight: "calc(100vh - 280px)",
               }}
             >
