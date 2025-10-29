@@ -1,5 +1,6 @@
 import { ThemeProvider } from "./context/ThemeContext";
 import ThemeToggle from "./components/ThemeToggle";
+import Logo from "./asset/logo.png";
 import Home from "./pages/Home";
 import "./App.css";
 
@@ -11,8 +12,8 @@ function App() {
         <header className="border-b border-light-border dark:border-dark-border bg-light-bg dark:bg-dark-surface sticky top-0 z-20">
           <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <span className="text-3xl">✅</span>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">
+              <img src={Logo} alt="TaskHub logo" className="h-10 w-10 object-contain" />
+              <h1 className="text-2xl font-bold bg-gradient-to-r text-primary-600 to-secondary-600  ">
                 TaskHub
               </h1>
             </div>
