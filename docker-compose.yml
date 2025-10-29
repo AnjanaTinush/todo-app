@@ -6,10 +6,8 @@ services:
     image: mysql:8.0
     container_name: todo_database
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: todo_db
     ports:
       - "3307:3306"
     volumes:
@@ -17,9 +15,10 @@ services:
     networks:
       - todo_network
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot123"]
       timeout: 20s
       retries: 10
+      interval: 5s
 
   # phpMyAdmin for database management
   phpmyadmin:
@@ -27,11 +26,10 @@ services:
     container_name: todo_phpmyadmin
     environment:
       PMA_HOST: database
-      PMA_USER: ${DB_USER}
-      PMA_PASSWORD: ${DB_PASSWORD}
-      PMA_ROOT_PASSWORD: root
+      PMA_USER: root
+      PMA_PASSWORD: root123
     ports:
-      - "8080:80"
+      - "8081:80"
     depends_on:
       database:
         condition: service_healthy
@@ -45,18 +43,20 @@ services:
       dockerfile: Dockerfile
     container_name: todo_backend
     environment:
-      PORT: ${PORT}
+      PORT: 4000
       DB_HOST: database
       DB_PORT: 3306
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_NAME: ${DB_NAME}
+      DB_USER: root
+      DB_PASSWORD: root123
+      DB_NAME: todo_db
     ports:
       - "4000:4000"
     depends_on:
-      - database
+      database:
+        condition: service_healthy
     networks:
       - todo_network
+    restart: on-failure
 
   # Frontend React App
   frontend:
@@ -64,10 +64,10 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        REACT_APP_API_BASE_URL: ${REACT_APP_API_BASE_URL}
+        REACT_APP_API_BASE_URL: http://localhost:4000/api
     container_name: todo_frontend
     environment:
-      REACT_APP_API_BASE_URL: ${REACT_APP_API_BASE_URL}
+      REACT_APP_API_BASE_URL: http://localhost:4000/api
     ports:
       - "3000:3000"
     depends_on:
@@ -82,4 +82,3 @@ volumes:
 networks:
   todo_network:
     driver: bridge
-
