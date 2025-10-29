@@ -26,12 +26,9 @@ const TaskList = ({ tasks, onDone, onEdit, onDelete }) => {
     );
   }
 
-  const displayTasks = tasks.slice(0, 3);
-  const hasMoreTasks = tasks.length > 3;
-
   return (
     <div className="task-list">
-      <div className={`mb-4 pb-4 border-b
+      <div className={`mb-6 pb-4 border-b
                       ${isDark ? "border-dark-border" : "border-light-border"}`}>
         <p className={`text-sm font-semibold
                       ${isDark ? "text-dark-text-secondary" : "text-light-text-secondary"}`}>
@@ -39,11 +36,11 @@ const TaskList = ({ tasks, onDone, onEdit, onDelete }) => {
         </p>
       </div>
 
-      {/* Horizontal Scroller for first 3 cards */}
-      <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-light-border dark:scrollbar-thumb-dark-border scrollbar-track-transparent">
-        <div className="flex gap-2 pb-2 min-w-max">
-          {displayTasks.map((task) => (
-            <div key={task.id} className="flex-shrink-0 w-96">
+      {/* Horizontal Scroller - All tasks side by side */}
+      <div className="overflow-x-auto pb-4">
+        <div className="flex gap-4 min-w-max">
+          {tasks.map((task) => (
+            <div key={task.id} className="flex-shrink-0 w-80">
               <TaskItem
                 task={task}
                 onDone={onDone}
@@ -54,27 +51,6 @@ const TaskList = ({ tasks, onDone, onEdit, onDelete }) => {
           ))}
         </div>
       </div>
-
-      {/* Show all remaining tasks in expanded view */}
-      {hasMoreTasks && (
-        <details className="mt-6">
-          <summary className={`cursor-pointer text-sm font-semibold p-3 rounded-lg transition-colors
-                              ${isDark ? "hover:bg-dark-surface text-dark-text-secondary" : "hover:bg-light-surface text-light-text-secondary"}`}>
-            View all {tasks.length} tasks
-          </summary>
-          <div className="mt-4 space-y-2">
-            {tasks.slice(3).map((task) => (
-              <TaskItem
-                key={task.id}
-                task={task}
-                onDone={onDone}
-                onEdit={onEdit}
-                onDelete={onDelete}
-              />
-            ))}
-          </div>
-        </details>
-      )}
     </div>
   );
 };
