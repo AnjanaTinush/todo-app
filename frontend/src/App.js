@@ -9,17 +9,26 @@ function App() {
     <ThemeProvider>
       <div className="min-h-screen transition-colors duration-300 bg-light-bg dark:bg-dark-bg">
         {/* Header */}
-        <header className="border-b border-light-border dark:border-dark-border bg-light-bg dark:bg-dark-surface sticky top-0 z-20">
-          <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <img src={Logo} alt="TaskHub logo" className="h-10 w-10 object-contain" />
-              <h1 className="text-2xl font-bold bg-gradient-to-r text-primary-600 to-secondary-600  ">
-                TaskHub
-              </h1>
+        <header className="border-b border-light-border dark:border-dark-border bg-light-bg dark:bg-dark-surface sticky top-0 z-20 backdrop-blur-sm bg-opacity-95 dark:bg-opacity-95 shadow-sm">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="flex-shrink-0 p-2 bg-primary-100 dark:bg-primary-900 rounded-lg transition-colors duration-300">
+                <img src={Logo} alt="TaskHub logo" className="h-8 w-8 object-contain" />
+              </div>
+              <div className="min-w-0">
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent dark:from-primary-400 dark:to-secondary-400 whitespace-nowrap">
+                  TaskHub
+                </h1>
+                <p className="text-xs text-light-text-secondary dark:text-dark-text-secondary truncate">
+                  Stay organized & productive
+                </p>
+              </div>
             </div>
-            <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">
-              Organize your tasks with style
-            </p>
+            <div className="hidden sm:flex items-center">
+              <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">
+                Organize your tasks with style
+              </p>
+            </div>
           </div>
         </header>
 
