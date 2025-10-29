@@ -17,9 +17,7 @@ function App() {
                 TaskHub
               </h1>
             </div>
-            <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">
-              Organize your tasks with style
-            </p>
+            
           </div>
         </header>
 
