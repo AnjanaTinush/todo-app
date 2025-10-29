@@ -26,8 +26,12 @@ const TaskList = ({ tasks, onDone, onEdit, onDelete }) => {
     );
   }
 
+  const displayTasks = tasks.slice(0, 3);
+  const remainingTasks = tasks.slice(3);
+  const hasMoreTasks = remainingTasks.length > 0;
+
   return (
-    <div className="task-list">
+    <div className="task-list flex flex-col h-full">
       <div className={`mb-6 pb-4 border-b
                       ${isDark ? "border-dark-border" : "border-light-border"}`}>
         <p className={`text-sm font-semibold
@@ -36,9 +40,9 @@ const TaskList = ({ tasks, onDone, onEdit, onDelete }) => {
         </p>
       </div>
 
-      {/* Vertical Stack - All tasks stacked vertically */}
-      <div className="space-y-3">
-        {tasks.map((task) => (
+      {/* First 3 Cards - Fixed Display */}
+      <div className="space-y-3 flex-shrink-0">
+        {displayTasks.map((task) => (
           <TaskItem
             key={task.id}
             task={task}
@@ -48,6 +52,23 @@ const TaskList = ({ tasks, onDone, onEdit, onDelete }) => {
           />
         ))}
       </div>
+
+      {/* Scrollable Container for Remaining Cards */}
+      {hasMoreTasks && (
+        <div className="mt-6 flex-1 overflow-y-auto">
+          <div className="space-y-3 pr-2">
+            {remainingTasks.map((task) => (
+              <TaskItem
+                key={task.id}
+                task={task}
+                onDone={onDone}
+                onEdit={onEdit}
+                onDelete={onDelete}
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
