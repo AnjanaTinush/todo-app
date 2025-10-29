@@ -341,8 +341,13 @@ npm start                # Run with node
 npm run dev              # Run with nodemon (auto-reload)
 npm test                 # Run tests
 ```
-## Unit and intrigation testing
+## Unit  testing frontend
+In project directly  cd 'C:\Users\ANJANA TINUSH\Desktop\New folder\todo-app\frotend' then run:- npm test
+
+
+## Unit and intrigation testing backend
 In project directly  cd 'C:\Users\ANJANA TINUSH\Desktop\New folder\todo-app\backend' then run:- npm test
+
 
 ## Troubleshooting
 
