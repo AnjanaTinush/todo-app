@@ -65,13 +65,13 @@ const Home = () => {
   };
 
   return (
-    <div className="home py-6 sm:py-12 px-4 sm:px-6">
+    <div className="home py-8 px-6">
       <div className="max-w-7xl mx-auto">
         {/* Page Header */}
-        <div className="mb-8 sm:mb-12 text-center">
-          <div className="flex items-center justify-center gap-2 sm:gap-3 mb-3">
+        <div className="mb-12 text-center">
+          <div className="flex items-center justify-center gap-3 mb-3">
             <h1
-              className={`text-3xl sm:text-5xl font-bold
+              className={`text-5xl font-bold
                 ${isDark
                   ? "text-dark-text"
                   : "bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent"
@@ -79,11 +79,11 @@ const Home = () => {
             >
               Welcome back!
             </h1>
-            <img src={imoji} alt="TaskHub emoji" className="h-12 sm:h-20 w-12 sm:w-20 object-contain" />
+            <img src={imoji} alt="TaskHub emoji" className="h-20 w-20 object-contain" />
           </div>
 
           <p
-            className={`text-base sm:text-lg transition-colors duration-300
+            className={`text-lg
               ${isDark ? "text-dark-text-secondary" : "text-light-text-secondary"}`}
           >
             Manage your tasks efficiently and stay organized
@@ -91,10 +91,10 @@ const Home = () => {
         </div>
 
         {/* Main Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Form Section - Sticky on desktop */}
           <div className="lg:col-span-1">
-            <div className="sticky top-[80px] z-10">
+            <div className="sticky top-[80px]">
               <TaskForm
                 onAdd={async (taskData) => {
                   try {
@@ -112,24 +112,21 @@ const Home = () => {
           <div className="lg:col-span-3">
             {tasks.length > 0 && (
               <div
-                className={`mb-6 p-3 sm:p-4 rounded-xl border transition-all duration-300
+                className={`mb-6 p-4 rounded-xl border
                   ${isDark
                     ? "bg-dark-surface border-dark-border"
                     : "bg-light-surface border-light-border"
                   }`}
               >
-                <div className="flex items-center gap-2">
-                  <span className="text-lg">📊</span>
-                  <p
-                    className={`text-sm font-semibold
-                      ${isDark
-                        ? "text-dark-text-secondary"
-                        : "text-light-text-secondary"
-                      }`}
-                  >
-                    Progress: {tasks.length} active task{tasks.length !== 1 ? "s" : ""}
-                  </p>
-                </div>
+                <p
+                  className={`text-sm font-semibold
+                    ${isDark
+                      ? "text-dark-text-secondary"
+                      : "text-light-text-secondary"
+                    }`}
+                >
+                  Progress: {tasks.length} active task{tasks.length !== 1 ? "s" : ""}
+                </p>
               </div>
             )}
 
