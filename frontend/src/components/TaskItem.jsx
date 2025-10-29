@@ -71,19 +71,19 @@ const TaskItem = ({ task, onDone, onEdit, onDelete }) => {
         {/* Action Buttons */}
         <div className="flex gap-2 flex-shrink-0 flex-wrap justify-end">
           <ActionButton
-            onClick={() => onEdit(task)}
+            onClick={() => onEdit?.(task)}
             variant="edit"
             label="Edit"
             icon="✏️"
           />
           <ActionButton
-            onClick={() => onDelete(task.id)}
+            onClick={() => onDelete?.(task.id)}
             variant="delete"
             label="Delete"
             icon="🗑️"
           />
           <ActionButton
-            onClick={() => onDone(task.id)}
+            onClick={() => onDone?.(task.id)}
             variant="done"
             label="Done"
             icon="✓"

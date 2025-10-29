@@ -1,18 +1,9 @@
-/**
- * Integration success-only tests for POST (create task) and GET (list tasks)
- *
- * NOTE: These tests assume a test runner like Jest + Supertest. They mock
- * the task service so they do not require a real database. If you don't have
- * dev dependencies installed yet, add `jest` and `supertest` to your backend
- * devDependencies and run `npm test` from the backend folder.
- */
+
 
 import request from "supertest";
 import { jest } from "@jest/globals";
 
-// Use Jest ESM mocking so the service is mocked before `app` (and controllers)
-// are imported. This prevents the real service from being loaded and hitting
-// the database during integration tests.
+
 const mockAddTask = jest.fn();
 const mockListRecentTasks = jest.fn();
 

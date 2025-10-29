@@ -1,10 +1,4 @@
-/**
- * Unit success-only tests for taskService (business logic) using mocked model
- * methods. These tests assert the happy-path behavior only.
- *
- * NOTE: Assumes Jest as test runner. If not installed, add `jest` to backend
- * devDependencies.
- */
+
 
 import { jest } from "@jest/globals";
 // Use Jest ESM mocking to mock the model before the service is imported.
