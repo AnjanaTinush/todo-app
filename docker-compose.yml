@@ -2,18 +2,39 @@ version: '3.8'
 
 services:
   # MySQL Database
-  mysql:
+  database:
     image: mysql:8.0
-    container_name: todo_mysql
+    container_name: todo_database
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    networks:
+      - todo_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # phpMyAdmin for database management
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: todo_phpmyadmin
+    environment:
+      PMA_HOST: database
+      PMA_USER: ${DB_USER}
+      PMA_PASSWORD: ${DB_PASSWORD}
+      PMA_ROOT_PASSWORD: root
+    ports:
+      - "8080:80"
+    depends_on:
+      database:
+        condition: service_healthy
     networks:
       - todo_network
 
@@ -25,14 +46,15 @@ services:
     container_name: todo_backend
     environment:
       PORT: ${PORT}
-      DB_HOST: ${DB_HOST}
+      DB_HOST: database
+      DB_PORT: 3306
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
     ports:
       - "4000:4000"
     depends_on:
-      - mysql
+      - database
     networks:
       - todo_network
 
@@ -50,22 +72,6 @@ services:
       - "3000:3000"
     depends_on:
       - backend
-    networks:
-      - todo_network
-
-  # phpMyAdmin for Database Management
-  phpmyadmin:
-    image: phpmyadmin:latest
-    container_name: todo_phpmyadmin
-    environment:
-      PMA_HOST: mysql
-      PMA_USER: ${DB_USER}
-      PMA_PASSWORD: ${DB_PASSWORD}
-      PMA_ROOT_PASSWORD: root
-    ports:
-      - "8080:80"
-    depends_on:
-      - mysql
     networks:
       - todo_network
 
