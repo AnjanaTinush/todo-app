@@ -36,20 +36,17 @@ const TaskList = ({ tasks, onDone, onEdit, onDelete }) => {
         </p>
       </div>
 
-      {/* Horizontal Scroller - All tasks side by side */}
-      <div className="overflow-x-auto pb-4">
-        <div className="flex gap-4 min-w-max">
-          {tasks.map((task) => (
-            <div key={task.id} className="flex-shrink-0 w-80">
-              <TaskItem
-                task={task}
-                onDone={onDone}
-                onEdit={onEdit}
-                onDelete={onDelete}
-              />
-            </div>
-          ))}
-        </div>
+      {/* Vertical Stack - All tasks stacked vertically */}
+      <div className="space-y-3">
+        {tasks.map((task) => (
+          <TaskItem
+            key={task.id}
+            task={task}
+            onDone={onDone}
+            onEdit={onEdit}
+            onDelete={onDelete}
+          />
+        ))}
       </div>
     </div>
   );
