@@ -26,6 +26,9 @@ const TaskList = ({ tasks, onDone, onEdit, onDelete }) => {
     );
   }
 
+  const displayTasks = tasks.slice(0, 3);
+  const hasMoreTasks = tasks.length > 3;
+
   return (
     <div className="task-list">
       <div className={`mb-4 pb-4 border-b
@@ -36,17 +39,42 @@ const TaskList = ({ tasks, onDone, onEdit, onDelete }) => {
         </p>
       </div>
 
-      <div className="space-y-2">
-        {tasks.map((task) => (
-          <TaskItem
-            key={task.id}
-            task={task}
-            onDone={onDone}
-            onEdit={onEdit}
-            onDelete={onDelete}
-          />
-        ))}
+      {/* Horizontal Scroller for first 3 cards */}
+      <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-light-border dark:scrollbar-thumb-dark-border scrollbar-track-transparent">
+        <div className="flex gap-2 pb-2 min-w-max">
+          {displayTasks.map((task) => (
+            <div key={task.id} className="flex-shrink-0 w-96">
+              <TaskItem
+                task={task}
+                onDone={onDone}
+                onEdit={onEdit}
+                onDelete={onDelete}
+              />
+            </div>
+          ))}
+        </div>
       </div>
+
+      {/* Show all remaining tasks in expanded view */}
+      {hasMoreTasks && (
+        <details className="mt-6">
+          <summary className={`cursor-pointer text-sm font-semibold p-3 rounded-lg transition-colors
+                              ${isDark ? "hover:bg-dark-surface text-dark-text-secondary" : "hover:bg-light-surface text-light-text-secondary"}`}>
+            View all {tasks.length} tasks
+          </summary>
+          <div className="mt-4 space-y-2">
+            {tasks.slice(3).map((task) => (
+              <TaskItem
+                key={task.id}
+                task={task}
+                onDone={onDone}
+                onEdit={onEdit}
+                onDelete={onDelete}
+              />
+            ))}
+          </div>
+        </details>
+      )}
     </div>
   );
 };
