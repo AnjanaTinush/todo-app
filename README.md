@@ -14,9 +14,13 @@ This is a modern, professional-grade Todo application that helps users manage th
 - 📱 **Responsive Design**: Works seamlessly on all device sizes
 - 🐳 **Docker Ready**: Complete containerization with Docker Compose
 
+<p align="center">
+  <img src="./frontend/src/asset/overviewDark.png" alt="Todo App Overview - Dark" width="850" />
+</p>
 
-![Todo App Overview](./frontend/src/asset/overview.png)
-
+<p align="center">
+  <img src="./frontend/src/asset/overvewLight.png" alt="Todo App Overview - Light" width="850" />
+</p>
 
 ## Project Structure
 
